@@ -5,7 +5,7 @@ Resources:
   Net5Layer:
     Type: AWS::Serverless::LayerVersion
     Properties:
-      LayerName: net5.0
+      LayerName: net5
       Description: Lambda Layer for .NET 5
       CompatibleRuntimes:
         - provided.al2
