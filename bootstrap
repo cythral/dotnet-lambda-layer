@@ -1,3 +1,3 @@
 #!/bin/sh
-IFS='::' read -r assembly <<<"$_HANDLER"
+IFS='::' read -r assembly handlerName handlerMethod <<<"$_HANDLER"
 DOTNET_ROOT=/opt/ $LAMBDA_TASK_ROOT/$assembly
