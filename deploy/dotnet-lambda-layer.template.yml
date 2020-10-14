@@ -9,5 +9,5 @@ Resources:
       Description: Lambda Layer for .NET 5
       CompatibleRuntimes:
         - provided.al2
-      ContentUri: ./bin
+      ContentUri: ../bin
       
