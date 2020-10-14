@@ -1,0 +1,13 @@
+Description: Lambda Layer for .NET 5
+Transform: AWS::Serverless-2016-10-31
+Resources:
+  
+  Net5Layer:
+    Type: AWS::Serverless::LayerVersion
+    Properties:
+      LayerName: net5.0
+      Description: Lambda Layer for .NET 5
+      CompatibleRuntimes:
+        - provided.al2
+      ContentUri: ./bin
+      

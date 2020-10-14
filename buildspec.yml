@@ -1,0 +1,28 @@
+version: 0.2
+env:
+  variables:
+    TEMPLATE_NAME: dotnet-lambda-layer
+
+phases:
+  install:
+    runtime-versions:
+      docker: 18
+    
+    commands:
+      - dotnet-install.sh --jsonfile global.json
+
+  build:
+    commands:
+      - ./build.sh
+      - mv deploy/$TEMPLATE_NAME.template.yml deploy/$TEMPLATE_NAME.template.yml.bak
+      - aws cloudformation package
+        --template-file deploy/$TEMPLATE_NAME.template.yml.bak
+        --s3-bucket $ARTIFACT_STORE
+        --s3-prefix templates
+        --output-template-file deploy/$TEMPLATE_NAME.template.yml
+  
+artifacts:
+  discard-paths: yes
+  files:
+    - "deploy/dotnet-lambda-layer.template.yml"
+    

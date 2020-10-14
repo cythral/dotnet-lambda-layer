@@ -1,0 +1,3 @@
+#!/bin/sh
+IFS='::' read -r assembly <<<"$_HANDLER"
+DOTNET_ROOT=/opt/ $LAMBDA_TASK_ROOT/$assembly
