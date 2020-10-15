@@ -8,9 +8,6 @@ phases:
     runtime-versions:
       docker: 18
     
-    commands:
-      - dotnet-install.sh --jsonfile global.json
-
   build:
     commands:
       - ./build.sh
@@ -24,5 +21,5 @@ phases:
 artifacts:
   discard-paths: yes
   files:
-    - "deploy/dotnet-lambda-layer.template.yml"
+    - "deploy/$TEMPLATE_NAME.template.yml"
     
