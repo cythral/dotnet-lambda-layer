@@ -52,8 +52,7 @@ Resources:
             Action: s3:GetObject
             Resource:
               - !Sub arn:aws:s3:::${ArtifactStore}/templates/*
-            Principal:
-              Service: serverlessrepo.amazonaws.com
+            Principal: "*"
 
   BuildProject:
     Type: AWS::CodeBuild::Project
