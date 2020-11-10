@@ -2,6 +2,8 @@
 
 This provides an AWS Lambda Layer containing .NET 5. This does not do everything that the hosted runtimes do, it simply invokes a non-self contained, executable assembly that interacts with the Lambda Runtime API in order to reduce package sizes.
 
+[Available on the Serverless Application Repository](https://console.aws.amazon.com/lambda/home?region=us-east-1#/create/app?applicationId=arn:aws:serverlessrepo:us-east-1:580493967798:applications/dotnet-lambda-layer)
+
 ## Prerequisites
 
 - [dotnet-install script](https://docs.microsoft.com/en-us/dotnet/core/tools/dotnet-install-script)
