@@ -48,6 +48,11 @@ Resources:
                 - !Ref AWS::AccountId
                 - !ImportValue cfn-metadata:DevAgentRoleArn
                 - !ImportValue cfn-metadata:ProdAgentRoleArn
+          - Effect: Allow
+            Action: s3:GetObject
+            Resource:
+              - !Sub arn:aws:s3:::${ArtifactStore}/templates/*
+            Principal: "*"
 
   BuildProject:
     Type: AWS::CodeBuild::Project
