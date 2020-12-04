@@ -52,9 +52,33 @@
         {
           "Variable": "$.SupersededOutput.Superseded",
           "BooleanEquals": false,
-          "Next": "Deploy to Dev"
+          "Next": "Deploy to Oss"
         }
       ]
+    },
+    "Deploy to Oss": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::sqs:sendMessage.waitForTaskToken",
+      "ResultPath": null,
+      "Parameters": {
+        "QueueUrl": "${DeploymentQueue}",
+        "MessageGroupId": "${GithubRepo}-oss",
+        "MessageBody": {
+          "StackName": "${GithubRepo}",
+          "ZipLocation.$": "$.BuildOutput.Build.Artifacts.Location",
+          "TemplateFileName": "${GithubRepo}.template.yml",
+          "Capabilities": ["CAPABILITY_IAM", "CAPABILITY_AUTO_EXPAND"],
+          "RoleArn": "${OssRoleArn}",
+          "Token.$": "$$.Task.Token",
+          "EnvironmentName": "oss",
+          "CommitInfo": {
+            "GithubOwner": "${GithubOwner}",
+            "GithubRepository": "${GithubRepo}",
+            "GithubRef.$": "$.head_commit.id"
+          }
+        }
+      },
+      "Next": "Deploy to Dev"
     },
     "Deploy to Dev": {
       "Type": "Task",

@@ -126,6 +126,7 @@ Resources:
         BuildProject: !Ref BuildProject
         DeploymentQueue: !Ref DeploymentQueue
         SupersessionQueue: !Ref SupersessionQueue
+        OssRoleArn: !ImportValue cfn-metadata:OssAgentRoleArn
         DevRoleArn: !ImportValue cfn-metadata:DevAgentRoleArn
         ProdRoleArn: !ImportValue cfn-metadata:ProdAgentRoleArn
         SharedRoleArn: !ImportValue cfn-utilities:MasterRoleArn
