@@ -131,7 +131,7 @@ Resources:
         ProdRoleArn: !ImportValue cfn-metadata:ProdAgentRoleArn
         SharedRoleArn: !ImportValue cfn-utilities:MasterRoleArn
         ApprovalNotificationFunction: !ImportValue cfn-core:ApprovalNotificationFunctionArn
-    Metadata:
+    Metadata: 
       cfn-lint:
         config:
           ignore_checks:
