@@ -17,7 +17,7 @@ phases:
         --s3-bucket $ARTIFACT_STORE
         --s3-prefix templates
         --output-template-file deploy/$TEMPLATE_NAME.template.yml
-  
+
 artifacts:
   discard-paths: yes
   files:

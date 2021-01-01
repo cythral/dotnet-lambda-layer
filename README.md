@@ -4,6 +4,15 @@ This provides an AWS Lambda Layer containing .NET 5. This does not do everything
 
 [Available on the Serverless Application Repository](https://console.aws.amazon.com/lambda/home?region=us-east-1#/create/app?applicationId=arn:aws:serverlessrepo:us-east-1:580493967798:applications/dotnet-lambda-layer)
 
+**Current .NET Version**: 5.0.101
+
+## News
+
+The latest version of the layer has a couple breaking changes:
+
+- The layer name has been renamed to `dotnet`
+- Layer versions will now coincide with their respective .NET versions.
+
 ## Prerequisites
 
 - [dotnet-install script](https://docs.microsoft.com/en-us/dotnet/core/tools/dotnet-install-script)
@@ -25,9 +34,4 @@ Please note that this repo uses a [custom CICD system built with step functions]
 After deployed, you can add the layer to your Lambda.  You can see [a CloudFormation example of this here](https://github.com/cythral/lambdajection/blob/master/examples/CustomRuntime/cloudformation.template.yml).  
 
 The handler scheme is the same as if you were using an AWS-hosted runtime: `Assembly::Class::Method`, however the runtime layer will ignore the class and method and simply execute the assembly given in the scheme.  The invoked assembly should handle interacting with the Lambda Runtime API (this can be done using the [RuntimeSupport package](https://github.com/aws/aws-lambda-dotnet/tree/master/Libraries/src/Amazon.Lambda.RuntimeSupport)).
-
-## Future
-
-- [ ] Include a pre-jitted RuntimeSupport package 
-- [ ] Include pre-jitted AWSSDK.Core
 

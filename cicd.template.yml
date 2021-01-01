@@ -84,6 +84,34 @@ Resources:
         Location: !Sub https://github.com/${GithubOwner}/${GithubRepo}.git
         ReportBuildStatus: true
 
+  DeployProject:
+    Type: AWS::CodeBuild::Project
+    Properties:
+      Name: !Sub ${AWS::StackName}-deploy
+      BadgeEnabled: true
+      ServiceRole: !ImportValue cfn-utilities:BuilderRoleArn
+      EncryptionKey: !ImportValue cfn-utilities:ArtifactKeyArn
+      Environment:
+        Image: aws/codebuild/amazonlinux2-x86_64-standard:3.0
+        ComputeType: BUILD_GENERAL1_SMALL
+        EnvironmentVariables:
+          - Name: ARTIFACT_STORE
+            Value: !Ref ArtifactStore
+          - Name: ROLE_ARN
+            Value: !ImportValue cfn-metadata:OssServerlessPublisherRoleArn
+        Type: LINUX_CONTAINER
+      Cache:
+        Type: LOCAL
+        Modes:
+          - LOCAL_DOCKER_LAYER_CACHE
+      Artifacts:
+        Type: NO_ARTIFACTS
+      Source:
+        Type: GITHUB
+        Location: !Sub https://github.com/${GithubOwner}/${GithubRepo}.git
+        ReportBuildStatus: true
+        BuildSpec: deployspec.yml
+
   SupersessionQueue:
     Type: AWS::SQS::Queue
     Properties:
@@ -124,6 +152,7 @@ Resources:
         GithubOwner: !Ref GithubOwner
         ArtifactStore: !Ref ArtifactStore
         BuildProject: !Ref BuildProject
+        DeployProject: !Ref DeployProject
         DeploymentQueue: !Ref DeploymentQueue
         SupersessionQueue: !Ref SupersessionQueue
         OssRoleArn: !ImportValue cfn-metadata:OssAgentRoleArn

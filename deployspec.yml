@@ -1,0 +1,25 @@
+version: 0.2
+phases:
+  install:
+    runtime-versions:
+      docker: 19
+
+  build:
+    commands:
+      - |
+        version=$(cat global.json | jq -r '.sdk.version')
+        creds=$(aws sts assume-role \
+          --role-arn ${ROLE_ARN} \
+          --role-session-name DeployDotnetLambdaLayer \
+          --query 'Credentials' \
+          --output text)
+
+        export AWS_ACCESS_KEY_ID=$(echo $creds | jq -r '.AccessKeyId')
+        export AWS_SECRET_ACCESS_KEY=$(echo $creds | jq -r '.SecretAccessKey')
+        export AWS_SESSION_TOKEN=$(echo $creds | jq -r '.SessionToken')
+
+        sam publish \
+          --template ${CODEBUILD_SRC_DIR_TEMPLATE}/dotnet-lambda-layer.template.yml \
+          --region us-east-1 \
+          --semantic-version ${version}
+        

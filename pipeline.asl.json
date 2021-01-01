@@ -15,16 +15,12 @@
       "Type": "Choice",
       "Choices": [
         {
-          "Variable": "$.on_default_branch",
-          "BooleanEquals": true,
+          "Variable": "$.ref",
+          "StringMatches": "refs/tags/*",
           "Next": "Check if Superseded"
-        },
-        {
-          "Variable": "$.on_default_branch",
-          "BooleanEquals": false,
-          "Next": "Success"
         }
-      ]
+      ],
+      "Default": "Success"
     },
     "Check if Superseded": {
       "Type": "Task",
@@ -58,127 +54,11 @@
     },
     "Deploy to Oss": {
       "Type": "Task",
-      "Resource": "arn:aws:states:::sqs:sendMessage.waitForTaskToken",
       "ResultPath": null,
+      "Resource": "arn:aws:states:::codebuild:startBuild.sync",
       "Parameters": {
-        "QueueUrl": "${DeploymentQueue}",
-        "MessageGroupId": "${GithubRepo}-oss",
-        "MessageBody": {
-          "StackName": "${GithubRepo}",
-          "ZipLocation.$": "$.BuildOutput.Build.Artifacts.Location",
-          "TemplateFileName": "${GithubRepo}.template.yml",
-          "Capabilities": ["CAPABILITY_IAM", "CAPABILITY_AUTO_EXPAND"],
-          "RoleArn": "${OssRoleArn}",
-          "Token.$": "$$.Task.Token",
-          "EnvironmentName": "oss",
-          "CommitInfo": {
-            "GithubOwner": "${GithubOwner}",
-            "GithubRepository": "${GithubRepo}",
-            "GithubRef.$": "$.head_commit.id"
-          }
-        }
-      },
-      "Next": "Deploy to Dev"
-    },
-    "Deploy to Dev": {
-      "Type": "Task",
-      "Resource": "arn:aws:states:::sqs:sendMessage.waitForTaskToken",
-      "ResultPath": null,
-      "Parameters": {
-        "QueueUrl": "${DeploymentQueue}",
-        "MessageGroupId": "${GithubRepo}-dev",
-        "MessageBody": {
-          "StackName": "${GithubRepo}",
-          "ZipLocation.$": "$.BuildOutput.Build.Artifacts.Location",
-          "TemplateFileName": "${GithubRepo}.template.yml",
-          "Capabilities": ["CAPABILITY_IAM", "CAPABILITY_AUTO_EXPAND"],
-          "RoleArn": "${DevRoleArn}",
-          "Token.$": "$$.Task.Token",
-          "EnvironmentName": "dev",
-          "CommitInfo": {
-            "GithubOwner": "${GithubOwner}",
-            "GithubRepository": "${GithubRepo}",
-            "GithubRef.$": "$.head_commit.id"
-          }
-        }
-      },
-      "Next": "Ask for Approval"
-    },
-    "Ask for Approval": {
-      "Type": "Task",
-      "Resource": "arn:aws:states:::lambda:invoke.waitForTaskToken",
-      "Next": "Was Approved?",
-      "ResultPath": "$.ApprovalDecision",
-      "Parameters": {
-        "FunctionName": "${ApprovalNotificationFunction}",
-        "Payload": {
-          "Pipeline": "${GithubRepo}",
-          "ArtifactStore": "${ArtifactStore}",
-          "CustomMessage": "${GithubRepo} requires manual approval for deployment to production",
-          "Token.$": "$$.Task.Token"
-        }
-      }
-    },
-    "Was Approved?": {
-      "Type": "Choice",
-      "Choices": [
-        {
-          "Variable": "$.ApprovalDecision.Action",
-          "StringEquals": "approve",
-          "Next": "Deploy to Prod"
-        },
-        {
-          "Variable": "$.ApprovalDecision.Action",
-          "StringEquals": "reject",
-          "Next": "Success"
-        }
-      ]
-    },
-    "Deploy to Prod": {
-      "Type": "Task",
-      "Resource": "arn:aws:states:::sqs:sendMessage.waitForTaskToken",
-      "ResultPath": null,
-      "Parameters": {
-        "QueueUrl": "${DeploymentQueue}",
-        "MessageGroupId": "${GithubRepo}-prod",
-        "MessageBody": {
-          "StackName": "${GithubRepo}",
-          "ZipLocation.$": "$.BuildOutput.Build.Artifacts.Location",
-          "TemplateFileName": "${GithubRepo}.template.yml",
-          "Capabilities": ["CAPABILITY_IAM", "CAPABILITY_AUTO_EXPAND"],
-          "RoleArn": "${ProdRoleArn}",
-          "Token.$": "$$.Task.Token",
-          "EnvironmentName": "prod",
-          "CommitInfo": {
-            "GithubOwner": "${GithubOwner}",
-            "GithubRepository": "${GithubRepo}",
-            "GithubRef.$": "$.head_commit.id"
-          }
-        }
-      },
-      "Next": "Deploy to Shared"
-    },
-    "Deploy to Shared": {
-      "Type": "Task",
-      "Resource": "arn:aws:states:::sqs:sendMessage.waitForTaskToken",
-      "ResultPath": null,
-      "Parameters": {
-        "QueueUrl": "${DeploymentQueue}",
-        "MessageGroupId": "${GithubRepo}-shared",
-        "MessageBody": {
-          "StackName": "${GithubRepo}",
-          "ZipLocation.$": "$.BuildOutput.Build.Artifacts.Location",
-          "TemplateFileName": "${GithubRepo}.template.yml",
-          "Capabilities": ["CAPABILITY_IAM", "CAPABILITY_AUTO_EXPAND"],
-          "RoleArn": "${SharedRoleArn}",
-          "Token.$": "$$.Task.Token",
-          "EnvironmentName": "shared",
-          "CommitInfo": {
-            "GithubOwner": "${GithubOwner}",
-            "GithubRepository": "${GithubRepo}",
-            "GithubRef.$": "$.head_commit.id"
-          }
-        }
+        "ProjectName": "${DeployProject}",
+        "SourceVersion.$": "$.head_commit_id"
       },
       "Next": "Success"
     },

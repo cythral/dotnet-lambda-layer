@@ -1,11 +1,29 @@
 Description: Lambda Layer for .NET 5
 Transform: AWS::Serverless-2016-10-31
+Metadata:
+  AWS::ServerlessRepo::Application:
+    Name: dotnet-lambda-layer
+    Description: |
+      (Unofficial) AWS Lambda Layer for .NET 5. Currently, this does not do everything that the hosted runtimes do. 
+      It simply invokes a non-self contained, executable assembly that interacts with the Lambda Runtime API in order 
+      to reduce package sizes.
+    Author: Cythral LLC
+    SpdxLicenseId: MIT
+    LicenseUrl: ../bin/LICENSE.txt
+    ReadmeUrl: ../bin/README.md
+    Labels:
+      - lambda
+      - dotnet
+      - layer
+      - csharp
+    HomePageUrl: https://github.com/cythral/dotnet-lambda-layer
+    SourceCodeUrl: https://github.com/cythral/dotnet-lambda-layer
+
 Resources:
-  
-  Net5Layer:
+  DotnetLayer:
     Type: AWS::Serverless::LayerVersion
     Properties:
-      LayerName: net5
+      LayerName: dotnet
       Description: Lambda Layer for .NET 5
       CompatibleRuntimes:
         - provided.al2
