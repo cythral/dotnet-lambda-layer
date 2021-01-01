@@ -58,7 +58,14 @@
       "Resource": "arn:aws:states:::codebuild:startBuild.sync",
       "Parameters": {
         "ProjectName": "${DeployProject}",
-        "SourceVersion.$": "$.head_commit_id"
+        "SourceVersion.$": "$.head_commit_id",
+        "SecondarySourcesOverride": [
+          {
+            "SourceIdentifier": "TEMPLATE",
+            "Type": "S3",
+            "Location.$": "$.BuildOutput.Build.Artifacts.Location"
+          }
+        ]
       },
       "Next": "Success"
     },
