@@ -29,3 +29,7 @@ Resources:
         - provided.al2
       ContentUri: ../bin
       
+Outputs:
+  LayerArn:
+    Description: ARN of the .NET Layer
+    Value: !Ref DotnetLayer
