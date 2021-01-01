@@ -7,16 +7,13 @@ phases:
   build:
     commands:
       - |
+        set -eo pipefail
         version=$(cat global.json | jq -r '.sdk.version')
-        creds=$(aws sts assume-role \
-          --role-arn ${ROLE_ARN} \
-          --role-session-name DeployDotnetLambdaLayer \
-          --query 'Credentials' \
-          --output text)
+        creds=$(aws sts assume-role --role-arn ${ROLE_ARN} --role-session-name DeployDotnetLambdaLayer)
 
-        export AWS_ACCESS_KEY_ID=$(echo $creds | jq -r '.AccessKeyId')
-        export AWS_SECRET_ACCESS_KEY=$(echo $creds | jq -r '.SecretAccessKey')
-        export AWS_SESSION_TOKEN=$(echo $creds | jq -r '.SessionToken')
+        export AWS_ACCESS_KEY_ID=$(echo $creds | jq -r '.Credentials.AccessKeyId')
+        export AWS_SECRET_ACCESS_KEY=$(echo $creds | jq -r '.Credentials.SecretAccessKey')
+        export AWS_SESSION_TOKEN=$(echo $creds | jq -r '.Credentials.SessionToken')
 
         sam publish \
           --template ${CODEBUILD_SRC_DIR_TEMPLATE}/dotnet-lambda-layer.template.yml \
