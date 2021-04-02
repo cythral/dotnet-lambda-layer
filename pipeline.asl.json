@@ -59,6 +59,12 @@
       "Parameters": {
         "ProjectName": "${DeployProject}",
         "SourceVersion.$": "$.head_commit_id",
+        "EnvironmentVariablesOverride": [
+          {
+            "Name": "REF",
+            "Value.$": "$.ref" 
+          }
+        ],
         "SecondarySourcesOverride": [
           {
             "SourceIdentifier": "TEMPLATE",
