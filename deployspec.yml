@@ -8,7 +8,7 @@ phases:
     commands:
       - |
         set -eo pipefail
-        version=$(cat global.json | jq -r '.sdk.version')
+        version=$(echo $REF | tr '/' ' ' | awk '{ print $3 }')
         creds=$(aws sts assume-role --role-arn ${ROLE_ARN} --role-session-name DeployDotnetLambdaLayer)
 
         export AWS_ACCESS_KEY_ID=$(echo $creds | jq -r '.Credentials.AccessKeyId')
