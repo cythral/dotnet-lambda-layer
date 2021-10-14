@@ -4,7 +4,7 @@ This provides an AWS Lambda Layer containing .NET 5. This does not do everything
 
 [Available on the Serverless Application Repository](https://console.aws.amazon.com/lambda/home?region=us-east-1#/create/app?applicationId=arn:aws:serverlessrepo:us-east-1:918601311641:applications/dotnet-lambda-layer)
 
-**Current .NET Version**: 5.0.404
+**Current .NET Version**: 5.0.402
 
 ## News
 
